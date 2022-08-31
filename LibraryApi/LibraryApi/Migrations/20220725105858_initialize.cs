@@ -1,0 +1,94 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace LibraryApi.Migrations
+{
+    public partial class initialize : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "RoleName" },
+                values: new object[] { 1, "Administrator" });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "RoleName" },
+                values: new object[] { 2, "Employee" });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "RoleName" },
+                values: new object[] { 3, "User" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "DateOfBirth", "Email", "FirstName", "LastName", "PasswordHash", "RoleId" },
+                values: new object[] { 1, null, "admin@gmail.com", "Admin", "Main", "AQAAAAEAACcQAAAAELVYHcZwsm/niqqzH8NBtLsFq7qrsgIsVMtmNgC90rpiUd8894BMiQ8jC4tJ+h8w/Q==", 1 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "DateOfBirth", "Email", "FirstName", "LastName", "PasswordHash", "RoleId" },
+                values: new object[] { 2, null, "emp@gmail.com", "Employee", "Main", "AQAAAAEAACcQAAAAEGpcLz+UzjrD04et2g0pSk8/U1ilUvt6E7u622VJot6qT2d2yly4JdRdnzqi4upXxg==", 2 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "DateOfBirth", "Email", "FirstName", "LastName", "PasswordHash", "RoleId" },
+                values: new object[] { 3, null, "user@gmail.com", "User", "Main", "AQAAAAEAACcQAAAAEKDw5qcTda8w3RGDTB1E738+VV5n3CiiTdZiNhvpqcAXaFKZfd3F8CVFl4kNDHYHJA==", 3 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_RoleId",
+                table: "Users",
+                column: "RoleId");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+        }
+    }
+}
